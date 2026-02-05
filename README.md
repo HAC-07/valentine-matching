@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Valentine Vibe Check
 
-## Getting Started
+Production-ready MVP for a viral Valentine compatibility quiz.
 
-First, run the development server:
+## Stack
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Supabase (Postgres + optional auth later)
+- Vercel ready
 
+## Features
+- Create a quiz (8-12 questions, 4 options each, select correct answers)
+- Share a unique quiz link
+- Friends answer and get compatibility score
+- Results page with fun message + breakdown
+- Per-quiz leaderboard (top 10)
+- Dynamic OpenGraph images for share cards
+
+## Setup
+1. Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create a Supabase project and run the schema
+- In Supabase SQL Editor, run:
+```sql
+\i supabase/schema.sql
+```
+- (Optional) Seed data:
+```sql
+\i supabase/seed.sql
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Add env vars
+Create `.env.local`:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the dev server
+```bash
+npm run dev
+```
 
-## Learn More
+Open `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment (Vercel)
+- Add the same env vars in Vercel.
+- Set `NEXT_PUBLIC_SITE_URL` to your deployed URL.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
+- `src/app` – routes, pages, OG images, server actions
+- `src/components` – reusable UI
+- `src/lib` – Supabase client, types, helpers
+- `supabase/schema.sql` – database schema + RLS policies
+- `supabase/seed.sql` – sample data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
+- No auth required for MVP (RLS allows public insert/select).
+- Leaderboard uses score + latest attempt tiebreaker.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
