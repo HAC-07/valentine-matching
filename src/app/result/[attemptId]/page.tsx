@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase";
 import { Shell } from "@/components/Shell";
 import { Card } from "@/components/Card";
 import { ShareButton } from "@/components/ShareButton";
-import { LiveLeaderboard } from "@/components/LiveLeaderboard";
 import { formatPercentage, scoreMessage } from "@/lib/quiz";
 
 type PageProps = {
@@ -154,10 +153,33 @@ export default async function ResultPage({ params }: PageProps) {
             </Card>
           </div>
           <div className="space-y-6">
-            <LiveLeaderboard
-              quizId={quiz.id}
-              initialAttempts={leaderboard ?? []}
-            />
+            <Card className="space-y-4">
+              <h2 className="font-display text-2xl text-rose-950">
+                Leaderboard
+              </h2>
+              {leaderboard && leaderboard.length > 0 ? (
+                <ul className="space-y-3 text-sm text-rose-900/70">
+                  {leaderboard.map((entry, index) => (
+                    <li
+                      key={entry.id}
+                      className="flex items-center justify-between rounded-xl bg-rose-50 px-4 py-3"
+                    >
+                      <span>
+                        {index + 1}. {entry.user_name ?? "Anonymous"}
+                      </span>
+                      <span className="font-semibold text-rose-700">
+                        {formatPercentage(entry.percentage)}%
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-rose-900/70">
+                  No attempts yet. Share your quiz link to see players appear
+                  here.
+                </p>
+              )}
+            </Card>
             <Card className="space-y-4 text-center">
               <p className="text-sm text-rose-900/70">
                 Want your own leaderboard?
