@@ -5,7 +5,7 @@ import { Card } from "@/components/Card";
 import { ValentinePrompt } from "@/components/ValentinePrompt";
 
 type PageProps = {
-  params: { attemptId: string };
+  params: Promise<{ attemptId: string }>;
 };
 
 export const generateMetadata = async () => {
@@ -15,10 +15,11 @@ export const generateMetadata = async () => {
 };
 
 export default async function ValentinePage({ params }: PageProps) {
+  const { attemptId } = await params;
   const { data: attempt, error: attemptError } = await supabase
     .from("attempts")
     .select("id, quiz_id, percentage")
-    .eq("id", params.attemptId)
+    .eq("id", attemptId)
     .single();
 
   if (attemptError || !attempt) {

@@ -6,28 +6,30 @@ import { ShareButton } from "@/components/ShareButton";
 import { LiveLeaderboard } from "@/components/LiveLeaderboard";
 
 type PageProps = {
-  params: { quizId: string };
+  params: Promise<{ quizId: string }>;
 };
 
 export const dynamic = "force-dynamic";
 
 export const generateMetadata = async ({ params }: PageProps) => {
+  const { quizId } = await params;
   return {
     title: "Quiz leaderboard",
     openGraph: {
-      images: [`/og/quiz/${params.quizId}`],
+      images: [`/og/quiz/${quizId}`],
     },
     twitter: {
-      images: [`/og/quiz/${params.quizId}`],
+      images: [`/og/quiz/${quizId}`],
     },
   };
 };
 
 export default async function QuizLeaderboardPage({ params }: PageProps) {
+  const { quizId } = await params;
   const { data: quiz, error: quizError } = await supabase
     .from("quizzes")
     .select("id, creator_name, title")
-    .eq("id", params.quizId)
+    .eq("id", quizId)
     .single();
 
   if (quizError || !quiz) {
@@ -36,7 +38,7 @@ export default async function QuizLeaderboardPage({ params }: PageProps) {
 
   const { data: leaderboard } = await supabase
     .from("attempts")
-    .select("id, user_name, score, percentage, created_at")
+    .select("id, quiz_id, user_name, score, percentage, created_at")
     .eq("quiz_id", quiz.id)
     .order("score", { ascending: false })
     .order("created_at", { ascending: false })

@@ -1,17 +1,20 @@
 import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { formatPercentage } from "@/lib/quiz";
 
 export const runtime = "edge";
 
 export async function GET(
-  _request: Request,
-  { params }: { params: { attemptId: string } },
+  _request: NextRequest,
+  context: { params: Promise<{ attemptId: string }> },
 ) {
+  const { attemptId } = await context.params;
+
   const { data: attempt } = await supabase
     .from("attempts")
     .select("id, quiz_id, percentage")
-    .eq("id", params.attemptId)
+    .eq("id", attemptId)
     .single();
 
   const { data: quiz } = await supabase

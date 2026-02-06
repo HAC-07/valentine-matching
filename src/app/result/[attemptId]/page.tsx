@@ -6,28 +6,30 @@ import { ShareButton } from "@/components/ShareButton";
 import { formatPercentage, scoreMessage } from "@/lib/quiz";
 
 type PageProps = {
-  params: { attemptId: string };
+  params: Promise<{ attemptId: string }>;
 };
 
 export const dynamic = "force-dynamic";
 
 export const generateMetadata = async ({ params }: PageProps) => {
+  const { attemptId } = await params;
   return {
     title: "Your result",
     openGraph: {
-      images: [`/og/result/${params.attemptId}`],
+      images: [`/og/result/${attemptId}`],
     },
     twitter: {
-      images: [`/og/result/${params.attemptId}`],
+      images: [`/og/result/${attemptId}`],
     },
   };
 };
 
 export default async function ResultPage({ params }: PageProps) {
+  const { attemptId } = await params;
   const { data: attempt, error: attemptError } = await supabase
     .from("attempts")
     .select("id, quiz_id, user_name, score, percentage, created_at")
-    .eq("id", params.attemptId)
+    .eq("id", attemptId)
     .single();
 
   if (attemptError || !attempt) {
@@ -111,11 +113,16 @@ export default async function ResultPage({ params }: PageProps) {
                 Correct answers ({correctAnswers.length})
               </h2>
               <ul className="space-y-3 text-sm text-rose-900/70">
-                {correctAnswers.map((answer) => (
-                  <li key={answer.id} className="rounded-xl bg-rose-50 px-4 py-3">
-                    {answer.question.question_text}
-                  </li>
-                ))}
+                {correctAnswers.map((answer) => {
+                  const question = Array.isArray(answer.question)
+                    ? answer.question[0]
+                    : answer.question;
+                  return (
+                    <li key={answer.id} className="rounded-xl bg-rose-50 px-4 py-3">
+                      {question?.question_text}
+                    </li>
+                  );
+                })}
               </ul>
             </Card>
             <Card className="space-y-4">
@@ -124,11 +131,15 @@ export default async function ResultPage({ params }: PageProps) {
               </h2>
               <ul className="space-y-3 text-sm text-rose-900/70">
                 {missedAnswers.map((answer) => {
+                  const question = Array.isArray(answer.question)
+                    ? answer.question[0]
+                    : answer.question;
+                  if (!question) return null;
                   const options = {
-                    A: answer.question.option_a,
-                    B: answer.question.option_b,
-                    C: answer.question.option_c,
-                    D: answer.question.option_d,
+                    A: question.option_a,
+                    B: question.option_b,
+                    C: question.option_c,
+                    D: question.option_d,
                   };
                   return (
                     <li
@@ -136,15 +147,15 @@ export default async function ResultPage({ params }: PageProps) {
                       className="rounded-xl border border-rose-100 bg-white px-4 py-3"
                     >
                       <p className="font-semibold text-rose-900">
-                        {answer.question.question_text}
+                        {question.question_text}
                       </p>
                       <p className="text-xs text-rose-500">
                         Your pick: {answer.selected_option} · Correct:{" "}
-                        {answer.question.correct_option}
+                        {question.correct_option}
                       </p>
                       <p className="text-xs text-rose-700">
                         Correct answer:{" "}
-                        {options[answer.question.correct_option]}
+                        {options[question.correct_option as keyof typeof options]}
                       </p>
                     </li>
                   );

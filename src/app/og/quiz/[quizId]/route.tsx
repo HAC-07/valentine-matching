@@ -1,16 +1,19 @@
 import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 export const runtime = "edge";
 
 export async function GET(
-  _request: Request,
-  { params }: { params: { quizId: string } },
+  _request: NextRequest,
+  context: { params: Promise<{ quizId: string }> },
 ) {
+  const { quizId } = await context.params;
+
   const { data: quiz } = await supabase
     .from("quizzes")
     .select("creator_name, title")
-    .eq("id", params.quizId)
+    .eq("id", quizId)
     .single();
 
   const creator = quiz?.creator_name ?? "Someone";
