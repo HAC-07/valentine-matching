@@ -21,9 +21,12 @@ export const metadata: Metadata = {
   title: "Valentine Vibe Check",
   description:
     "Create a Valentine compatibility quiz and see how well your friends know you.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  ),
+  metadataBase: (() => {
+    const raw =
+      process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return new URL(withProtocol);
+  })(),
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
