@@ -37,12 +37,14 @@ export const metadata: Metadata = {
     description:
       "Create a Valentine compatibility quiz and see how well your friends know you.",
     type: "website",
+    images: ["/valentine-og.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Valentine Vibe Check",
     description:
       "Create a Valentine compatibility quiz and see how well your friends know you.",
+    images: ["/valentine-og.png"],
   },
 };
 
