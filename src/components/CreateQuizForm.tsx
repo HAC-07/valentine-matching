@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createQuiz } from "@/app/actions";
 import type { CreateQuestion } from "@/lib/types";
 import { optionLabels } from "@/lib/quiz";
+import { getSiteUrl } from "@/lib/site";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 
@@ -37,6 +38,7 @@ export const CreateQuizForm = () => {
     [emptyQuestion()],
   );
   const [error, setError] = useState<string | null>(null);
+  const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
 
   const canAddMore = questions.length < 12;
   const canRemove = questions.length > 1;
@@ -94,6 +96,7 @@ export const CreateQuizForm = () => {
 
   const handleSubmit = () => {
     setError(null);
+    setCopiedMessage(null);
     startTransition(async () => {
       const result = await createQuiz({
         creatorName,
@@ -106,6 +109,13 @@ export const CreateQuizForm = () => {
         return;
       }
       if (result?.quizId) {
+        // Auto-copy the quiz link right after creation (best-effort).
+        try {
+          await navigator.clipboard.writeText(`${getSiteUrl()}/quiz/${result.quizId}`);
+          setCopiedMessage("Copied quiz link!");
+        } catch {
+          // ignore (clipboard may be blocked by browser settings)
+        }
         router.push(`/quiz/${result.quizId}/leaderboard`);
       }
     });
@@ -262,6 +272,9 @@ export const CreateQuizForm = () => {
           {isPending ? "Creating..." : "Create my quiz"}
         </Button>
         {error && <p className="text-sm text-rose-600">{error}</p>}
+        {copiedMessage && (
+          <p className="text-sm font-semibold text-rose-700">{copiedMessage}</p>
+        )}
       </div>
     </div>
   );

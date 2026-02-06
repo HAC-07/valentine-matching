@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Shell } from "@/components/Shell";
 import { QuizForm } from "@/components/QuizForm";
+import { getSiteUrl } from "@/lib/site";
 
 type PageProps = {
   params: Promise<{ quizId: string }>;
@@ -51,7 +52,7 @@ export default async function QuizPage({ params }: PageProps) {
           title={quiz.title}
           creatorName={quiz.creator_name}
           questions={questions}
-          shareUrl={`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/quiz/${quiz.id}`}
+          shareUrl={`${getSiteUrl()}/quiz/${quiz.id}`}
         />
       </div>
     </Shell>

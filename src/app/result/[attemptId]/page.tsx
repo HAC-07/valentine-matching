@@ -4,6 +4,7 @@ import { Shell } from "@/components/Shell";
 import { Card } from "@/components/Card";
 import { ShareButton } from "@/components/ShareButton";
 import { formatPercentage, scoreMessage } from "@/lib/quiz";
+import { getSiteUrl } from "@/lib/site";
 
 type PageProps = {
   params: Promise<{ attemptId: string }>;
@@ -68,8 +69,7 @@ export default async function ResultPage({ params }: PageProps) {
   const correctAnswers = answers.filter((answer) => answer.is_correct);
   const missedAnswers = answers.filter((answer) => !answer.is_correct);
 
-  const shareUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const shareUrl = getSiteUrl();
 
   return (
     <Shell>

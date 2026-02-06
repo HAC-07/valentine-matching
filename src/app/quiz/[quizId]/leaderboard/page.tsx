@@ -4,6 +4,7 @@ import { Shell } from "@/components/Shell";
 import { Card } from "@/components/Card";
 import { ShareButton } from "@/components/ShareButton";
 import { LiveLeaderboard } from "@/components/LiveLeaderboard";
+import { getSiteUrl } from "@/lib/site";
 
 type PageProps = {
   params: Promise<{ quizId: string }>;
@@ -44,8 +45,7 @@ export default async function QuizLeaderboardPage({ params }: PageProps) {
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const baseUrl = getSiteUrl();
   const quizUrl = `${baseUrl}/quiz/${quiz.id}`;
   const leaderboardUrl = `${baseUrl}/quiz/${quiz.id}/leaderboard`;
 
