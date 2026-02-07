@@ -134,3 +134,20 @@ export const submitAttempt = async (payload: SubmitAttemptPayload) => {
 export const goToCreate = async () => {
   redirect("/create");
 };
+
+export const getStats = async () => {
+  const { count: totalAttempts } = await supabase
+    .from("attempts")
+    .select("*", { count: "exact", head: true });
+
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count: activeUsers } = await supabase
+    .from("attempts")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", oneHourAgo);
+
+  return {
+    totalAttempts: totalAttempts ?? 0,
+    activeUsers: activeUsers ?? 0,
+  };
+};

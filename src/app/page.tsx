@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Card } from "@/components/Card";
 import { Shell } from "@/components/Shell";
+import { StatsBanner } from "@/components/StatsBanner";
 
 export default function Home() {
   return (
     <Shell>
+      <StatsBanner />
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
         <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="space-y-6">

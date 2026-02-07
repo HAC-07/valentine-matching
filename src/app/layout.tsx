@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
@@ -71,6 +72,7 @@ export default function RootLayout({
       </head>
       <body className={`${manrope.variable} ${playfair.variable} antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
