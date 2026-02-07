@@ -6,7 +6,7 @@ import { Card } from "@/components/Card";
 
 export const StatsBanner = () => {
   const [stats, setStats] = useState<{
-    totalAttempts: number;
+    totalVisits: number;
     activeUsers: number;
   } | null>(null);
 
@@ -42,11 +42,10 @@ export const StatsBanner = () => {
           <span className="flex items-center gap-2.5">
             <span className="text-2xl">💘</span>
             <span>
-              Used by{" "}
               <strong className="font-display text-lg text-rose-950">
-                {stats.totalAttempts.toLocaleString()}
+                {stats.totalVisits.toLocaleString()}
               </strong>{" "}
-              {stats.totalAttempts === 1 ? "person" : "people"}
+              {stats.totalVisits === 1 ? "heart checked" : "hearts checked"}
             </span>
           </span>
           {stats.activeUsers > 0 && (

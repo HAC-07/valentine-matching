@@ -36,14 +36,21 @@ create table if not exists attempt_answers (
   is_correct boolean not null default false
 );
 
+create table if not exists visits (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now()
+);
+
 create index if not exists questions_quiz_id_idx on questions(quiz_id);
 create index if not exists attempts_quiz_id_idx on attempts(quiz_id);
 create index if not exists attempt_answers_attempt_id_idx on attempt_answers(attempt_id);
+create index if not exists visits_created_at_idx on visits(created_at);
 
 alter table quizzes enable row level security;
 alter table questions enable row level security;
 alter table attempts enable row level security;
 alter table attempt_answers enable row level security;
+alter table visits enable row level security;
 
 create policy "public read quizzes"
   on quizzes for select
@@ -75,5 +82,13 @@ create policy "public read attempt answers"
 
 create policy "public insert attempt answers"
   on attempt_answers for insert
+  with check (true);
+
+create policy "public read visits"
+  on visits for select
+  using (true);
+
+create policy "public insert visits"
+  on visits for insert
   with check (true);
 

@@ -135,19 +135,23 @@ export const goToCreate = async () => {
   redirect("/create");
 };
 
+export const trackVisit = async () => {
+  await supabase.from("visits").insert({});
+};
+
 export const getStats = async () => {
-  const { count: totalAttempts } = await supabase
-    .from("attempts")
+  const { count: totalVisits } = await supabase
+    .from("visits")
     .select("*", { count: "exact", head: true });
 
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { count: activeUsers } = await supabase
-    .from("attempts")
+    .from("visits")
     .select("*", { count: "exact", head: true })
     .gte("created_at", oneHourAgo);
 
   return {
-    totalAttempts: totalAttempts ?? 0,
+    totalVisits: totalVisits ?? 0,
     activeUsers: activeUsers ?? 0,
   };
 };
