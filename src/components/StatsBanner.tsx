@@ -24,47 +24,40 @@ export const StatsBanner = () => {
 
   if (!stats) {
     return (
-      <div className="mx-auto mb-8 w-full max-w-5xl">
-        <Card className="py-4">
-          <div className="flex items-center justify-center gap-2 text-base text-rose-600">
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-rose-300 border-t-rose-500"></span>
+      <div className="mx-auto mb-6 w-full max-w-5xl">
+        <div className="rounded-2xl border border-rose-100 bg-gradient-to-r from-rose-50/80 to-pink-50/80 px-6 py-3 backdrop-blur-sm">
+          <div className="flex items-center justify-center gap-2.5 text-sm text-rose-600">
+            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-rose-300 border-t-rose-500"></span>
             <span>Loading stats...</span>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto mb-8 w-full max-w-5xl">
-      <Card className="border-rose-200 bg-gradient-to-r from-rose-50 to-pink-50 py-4 shadow-md">
-        <div className="flex flex-wrap items-center justify-center gap-6 text-base font-medium text-rose-900">
-          <span className="flex items-center gap-2.5">
-            <span className="text-2xl">💘</span>
-            <span>
-              <strong className="font-display text-lg text-rose-950">
-                {stats.totalVisits.toLocaleString()}
-              </strong>{" "}
-              {stats.totalVisits === 1 ? "heart checked" : "hearts checked"}
-            </span>
-          </span>
-          {stats.activeUsers > 0 && (
-            <>
-              <span className="hidden text-rose-300 sm:inline">•</span>
-              <span className="flex items-center gap-2.5">
-                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-                <span>
-                  <strong className="font-display text-lg text-rose-950">
-                    {stats.activeUsers}
-                  </strong>{" "}
-                  {stats.activeUsers === 1 ? "person is" : "people are"}{" "}
-                  currently active
-                </span>
+    <div className="mx-auto mb-6 w-full max-w-5xl animate-in fade-in slide-in-from-top-4 duration-500">
+      <div className="group relative overflow-hidden rounded-2xl border border-rose-200/60 bg-gradient-to-br from-rose-50 via-pink-50 to-rose-50/50 px-6 py-4 shadow-lg shadow-rose-100/50 backdrop-blur-sm transition-all hover:shadow-xl hover:shadow-rose-200/50">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+        <div className="relative flex items-center justify-center gap-3">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <span className="text-3xl transition-transform duration-300 group-hover:scale-110">
+                💘
               </span>
-            </>
-          )}
+              <span className="absolute -right-1 -top-1 h-2 w-2 animate-ping rounded-full bg-rose-400 opacity-75"></span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-2xl font-bold text-rose-950 tabular-nums">
+                {stats.totalVisits.toLocaleString()}
+              </span>
+              <span className="text-sm font-medium text-rose-700">
+                {stats.totalVisits === 1 ? "heart checked" : "hearts checked"}
+              </span>
+            </div>
+          </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
